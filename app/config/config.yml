@@ -81,7 +81,7 @@ sonata_block:
         sonata.admin.block.admin_list:
             contexts: [admin]
 sonata_translation:
-    locales: [en, ua, ru]
+    locales: [en, uk_ua]
     default_locale: en
     knplabs:
         enabled: true
