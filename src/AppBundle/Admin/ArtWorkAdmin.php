@@ -13,27 +13,33 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->with('Art work')
-                ->add('title', 'text')
-                ->add('description', 'text')
-                ->add('materials', 'text')
-                ->add('slug', 'text')
-                ->add('width', 'integer')
-                ->add('height', 'integer')
+            ->with('')
+                ->add('title', 'text', array('label' => 'Title'))
+                ->add('description', 'text', array('label' => 'Full description'))
+             ->end()
+             ->with('Properties')
                 ->add(
                 'date',
                 'sonata_type_datetime_picker',
-                   [
+                [
                     'dp_side_by_side'       => false,
                     'dp_use_current'        => false,
                     'dp_use_seconds'        => false,
                     'dp_use_minutes'        => false,
                     'format' => "dd/MM/yyyy",
-                   ]
+                    'label'                 => 'Creation date'
+                ]
+
                 )
+                ->add('materials', 'text', array('label' => 'Materials'))
+
+                ->add('width', 'integer', array('label' => 'Widht'))
+                ->add('height', 'integer', array('label' => 'Height'))
+
                 ->add('price', 'money', array(
                     'currency' => 'USD',
-                    'grouping' => true
+                    'grouping' => true,
+                    'label'    => 'Price'
                 ))
                 ->add('inStock', 'choice', array(
                        'choices' => array(
@@ -41,9 +47,19 @@ class ArtWorkAdmin extends AbstractAdmin
                            'Sold' => false,
                   ),
                 ))
-                ->add('picture', 'file')
+                ->add('isPublished', 'choice', array(
+                   'choices' => array(
+                    'On front' => true,
+                    'Not active' => false,
+                   ),
+                ))
+            ->end()
+            ->with('Info')
+                ->add('slug', 'text', array('label' => 'Slug'))
+                ->add('picture', 'file', array('label' => 'Main image'))
                 ->add('images', 'file', array(
-                     'multiple' => true
+                     'multiple' => true,
+                     'label'    => 'Additional images'
                  ))
             ->end()
             ;
@@ -53,29 +69,19 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('title')
-            ->add('materials')
-            ->add('slug')
-            ->add('width')
-            ->add('height')
+            ->add('translations.title', null, array('label' => 'Title'))
             ->add('date')
-            ->add('price')
-            ->add('inStock')
         ;
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->addIdentifier('title')
-            ->add('materials')
-            ->add('slug')
-            ->add('width')
-            ->add('height')
+            ->addIdentifier('translations.title', null, array('label' => 'Title'))
             ->add('date')
             ->add('price')
             ->add('inStock')
-            ->add('picture')
+            ->add('isPublished')
         ;
     }
 

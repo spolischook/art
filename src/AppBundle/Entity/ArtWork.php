@@ -5,6 +5,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
+use Sonata\TranslationBundle\Model\TranslatableInterface;
+
 
 /**
  * ArtWork
@@ -12,9 +14,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="art_work")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArtWorkRepository")
  */
-class ArtWork
+class ArtWork implements TranslatableInterface
 {
     use ORMBehaviors\Timestampable\Timestampable;
+    use ORMBehaviors\Translatable\Translatable;
 
     /**
      * @var int
@@ -24,38 +27,6 @@ class ArtWork
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @ORM\Column(name="title", type="string", length=255)
-     */
-    private $title;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @ORM\Column(name="description", type="string", length=255)
-     */
-    private $description;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @ORM\Column(name="materials", type="string", length=255)
-     */
-    private $materials;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @ORM\Column(name="slug", type="string", length=255)
-     */
-    private $slug;
 
     /**
      * @var int
@@ -98,16 +69,22 @@ class ArtWork
     private $inStock;
 
     /**
-     * @var string
+     * @var bool
      * @Assert\NotBlank()
+     * @Assert\Type("bool")
+     * @ORM\Column(name="in_published", type="boolean")
+     */
+    private $isPublished;
+
+    /**
+     * @var string
      * @Assert\Type("string")
-     * @ORM\Column(name="picture", type="string", length=255)
+     * @ORM\Column(name="picture", type="string", length=255, nullable=true)
      */
     private $picture;
 
     /**
      * @var array
-     * @Assert\NotBlank()
      * @Assert\Type("array")
      * @ORM\Column(name="images", type="array")
      */
@@ -138,7 +115,7 @@ class ArtWork
      */
     public function setTitle($title)
     {
-        $this->title = $title;
+        $this->translate(null, false)->setTitle($title);
 
         return $this;
     }
@@ -150,7 +127,7 @@ class ArtWork
      */
     public function getTitle()
     {
-        return $this->title;
+        return $this->translate(null, false)->getTitle();
     }
 
     /**
@@ -162,7 +139,7 @@ class ArtWork
      */
     public function setDescription($description)
     {
-        $this->description = $description;
+        $this->translate(null, false)->setDescription($description);
 
         return $this;
     }
@@ -174,7 +151,7 @@ class ArtWork
      */
     public function getDescription()
     {
-        return $this->description;
+        return $this->translate(null, false)->getDescription();
     }
 
     /**
@@ -186,7 +163,7 @@ class ArtWork
      */
     public function setMaterials($materials)
     {
-        $this->materials = $materials;
+        $this->translate(null, false)->setMaterials($materials);
 
         return $this;
     }
@@ -198,7 +175,7 @@ class ArtWork
      */
     public function getMaterials()
     {
-        return $this->materials;
+        return $this->translate(null, false)->getMaterials();
     }
 
     /**
@@ -210,7 +187,7 @@ class ArtWork
      */
     public function setSlug($slug)
     {
-        $this->slug = $slug;
+        $this->translate(null, false)->setSlug($slug);
 
         return $this;
     }
@@ -222,7 +199,7 @@ class ArtWork
      */
     public function getSlug()
     {
-        return $this->slug;
+        return $this->translate(null, false)->getSlug();
     }
 
     /**
@@ -346,6 +323,30 @@ class ArtWork
     }
 
     /**
+     * Set isPublished
+     *
+     * @param boolean $isPublished
+     *
+     * @return ArtWork
+     */
+    public function setIsPublished($inPublished)
+    {
+        $this->isPublished = $inPublished;
+
+        return $this;
+    }
+
+    /**
+     * Get inPublished
+     *
+     * @return bool
+     */
+    public function getIsPublished()
+    {
+        return $this->isPublished;
+    }
+
+    /**
      * Set picture
      *
      * @param string $picture
@@ -391,6 +392,24 @@ class ArtWork
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->setCurrentLocale($locale);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return $this->getCurrentLocale();
     }
 }
 
