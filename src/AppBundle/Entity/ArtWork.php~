@@ -2,15 +2,15 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sonata\TranslationBundle\Model\TranslatableInterface;
 use Application\Sonata\MediaBundle\Entity\Media;
 
+
 /**
- * ArtWork.
+ * ArtWork
  *
  * @ORM\Table(name="art_work")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArtWorkRepository")
@@ -88,26 +88,25 @@ class ArtWork implements TranslatableInterface
     /**
      * @var Media
      *
-     * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media")
+     * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
      */
     private $picture;
 
     /**
-     * @var ArrayCollection|Media[]
-     * @ORM\OneToMany(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", mappedBy="artWork", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="images", referencedColumnName="id")
-     * })
+     * @var array
+     * @Assert\Type("array")
+     * @ORM\Column(name="media", type="array")
      */
     private $images;
 
     public function __construct()
     {
-        $this->images = new ArrayCollection();
+        $this->images = array();
     }
 
+
     /**
-     * Get id.
+     * Get id
      *
      * @return int
      */
@@ -117,7 +116,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set title.
+     * Set title
      *
      * @param string $title
      *
@@ -131,7 +130,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get title.
+     * Get title
      *
      * @return string
      */
@@ -141,7 +140,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set description.
+     * Set description
      *
      * @param string $description
      *
@@ -155,7 +154,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get description.
+     * Get description
      *
      * @return string
      */
@@ -165,7 +164,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set materials.
+     * Set materials
      *
      * @param string $materials
      *
@@ -179,7 +178,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get materials.
+     * Get materials
      *
      * @return string
      */
@@ -189,7 +188,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set slug.
+     * Set slug
      *
      * @param string $slug
      *
@@ -203,7 +202,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get slug.
+     * Get slug
      *
      * @return string
      */
@@ -213,9 +212,9 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set width.
+     * Set width
      *
-     * @param int $width
+     * @param integer $width
      *
      * @return ArtWork
      */
@@ -227,7 +226,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get width.
+     * Get width
      *
      * @return int
      */
@@ -237,9 +236,9 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set height.
+     * Set height
      *
-     * @param int $height
+     * @param integer $height
      *
      * @return ArtWork
      */
@@ -251,7 +250,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get height.
+     * Get height
      *
      * @return int
      */
@@ -261,7 +260,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set date.
+     * Set date
      *
      * @param \DateTime $date
      *
@@ -275,7 +274,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get date.
+     * Get date
      *
      * @return \DateTime
      */
@@ -285,7 +284,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set price.
+     * Set price
      *
      * @param float $price
      *
@@ -299,7 +298,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get price.
+     * Get price
      *
      * @return float
      */
@@ -309,9 +308,9 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set inStock.
+     * Set inStock
      *
-     * @param bool $inStock
+     * @param boolean $inStock
      *
      * @return ArtWork
      */
@@ -323,7 +322,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get inStock.
+     * Get inStock
      *
      * @return bool
      */
@@ -333,9 +332,9 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set isPublished.
+     * Set isPublished
      *
-     * @param bool $isPublished
+     * @param boolean $isPublished
      *
      * @return ArtWork
      */
@@ -347,7 +346,7 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get inPublished.
+     * Get inPublished
      *
      * @return bool
      */
@@ -357,9 +356,9 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set picture.
+     * Set picture
      *
-     * @param Media $picture
+     * @param string $picture
      *
      * @return ArtWork
      */
@@ -371,9 +370,9 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Get picture.
+     * Get picture
      *
-     * @return Media
+     * @return string
      */
     public function getPicture()
     {
@@ -381,42 +380,21 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Add images.
+     * Add imades
      *
-     * @param Media $image
+     * @param string $image
      *
      * @return ArtWork
      */
-    public function addImages($image)
+    public function addImage($image)
     {
-        if (!$image) {
-            $this->images = new ArrayCollection();
-        }
-
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->setArtWork($this);
-        }
+        $this->images[] = $image;
 
         return $this;
     }
 
     /**
-     * Remove image.
-     *
-     * @param Media $image
-     *
-     * @return ArtWork
-     */
-    public function removeImages($image)
-    {
-        $this->getImages()->removeElement($image);
-
-        return $this;
-    }
-
-    /**
-     * Get media.
+     * Get media
      *
      * @return array
      */
@@ -443,3 +421,4 @@ class ArtWork implements TranslatableInterface
         return $this->getCurrentLocale();
     }
 }
+
