@@ -13,57 +13,85 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->with('')
-                ->add('title', 'text', array('label' => 'Title'))
-                ->add('description', 'text', array('label' => 'Full description'))
+            ->with('Basic', ['class' => 'col-md-8'])
+                ->add('title', 'text', ['label' => 'Title'])
+                ->add('description', 'textarea',
+                    [
+                        'attr' => [
+                            'style' => 'height:400px',
+                        ],
+                        'label' => 'Full description',
+                    ])
              ->end()
-             ->with('Properties')
+             ->with('Properties', ['class' => 'col-md-4'])
                 ->add(
                 'date',
                 'sonata_type_datetime_picker',
                 [
-                    'dp_side_by_side'       => false,
-                    'dp_use_current'        => false,
-                    'dp_use_seconds'        => false,
-                    'dp_use_minutes'        => false,
-                    'format' => "dd/MM/yyyy",
-                    'label'                 => 'Creation date'
+                    'dp_side_by_side' => false,
+                    'dp_use_current' => false,
+                    'dp_use_seconds' => false,
+                    'dp_use_minutes' => false,
+                    'format' => 'dd/MM/yyyy',
+                    'label' => 'Creation date',
                 ]
 
                 )
-                ->add('materials', 'text', array('label' => 'Materials'))
+                ->add('materials', 'text', ['label' => 'Materials'])
 
-                ->add('width', 'integer', array('label' => 'Widht'))
-                ->add('height', 'integer', array('label' => 'Height'))
+                ->add('width', 'integer', ['label' => 'Widht'])
+                ->add('height', 'integer', ['label' => 'Height'])
 
-                ->add('price', 'money', array(
+                ->add('price', 'money', [
                     'currency' => 'USD',
                     'grouping' => true,
-                    'label'    => 'Price'
-                ))
-                ->add('inStock', 'choice', array(
-                       'choices' => array(
+                    'label' => 'Price',
+                ])
+                ->add('inStock', 'choice', [
+                       'choices' => [
                            'Available' => true,
                            'Sold' => false,
-                  ),
-                ))
-                ->add('isPublished', 'choice', array(
-                   'choices' => array(
+                  ],
+                ])
+                ->add('isPublished', 'choice', [
+                   'choices' => [
                     'On front' => true,
                     'Not active' => false,
-                   ),
-                ))
+                   ],
+                ])
             ->end()
-            ->with('Info')
-                ->add('slug', 'text', array('label' => 'Slug'))
-                ->add('picture', 'file', array('label' => 'Main image'))
-                ->add('images', 'file', array(
-                     'multiple' => true,
-                     'label'    => 'Additional images'
-                 ))
+            ->with('Info', ['class' => 'col-md-8'])
+                ->add('slug', 'text', ['label' => 'Slug'])
+                ->add(
+                    'picture',
+                    'sonata_type_model_list',
+                    [
+                        'btn_list' => true,
+                    ],
+                    [
+                        'link_parameters' => [
+                            'context' => 'picture',
+                            'provider' => 'sonata.media.provider.image',
+                        ],
+                    ])
+            ->add(
+                'images',
+                'sonata_type_collection',
+                [
+                    'label' => 'Additional images',
+                ],
+                [
+                    'edit' => 'inline',
+                    'inline' => 'table',
+                    'sortable' => 'position',
+                    'link_parameters' => [
+                        'context' => 'foto',
+                        'provider' => 'sonata.media.provider.image',
+                    ],
+                ]
+            )
             ->end()
-            ;
-
+        ;
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
@@ -77,11 +105,18 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->addIdentifier('translations.title', null, array('label' => 'Title'))
-            ->add('date')
+            ->add('title', 'srting')
+            ->add('date', 'date')
             ->add('price')
             ->add('inStock')
             ->add('isPublished')
+            ->add('_action', null, array(
+                'actions' => array(
+                    'show' => array(),
+                    'edit' => array(),
+                    'delete' => array(),
+                ),
+            ))
         ;
     }
 

@@ -6,9 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
- * ArtWork
+ * ArtWork.
  *
  * @ORM\Table(name="art_work_translation")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArtWorkTranslationRepository")
@@ -43,15 +42,7 @@ class ArtWorkTranslation
     private $materials;
 
     /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @ORM\Column(name="slug", type="string", length=255)
-     */
-    private $slug;
-
-    /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -61,7 +52,7 @@ class ArtWorkTranslation
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -75,7 +66,7 @@ class ArtWorkTranslation
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -85,7 +76,7 @@ class ArtWorkTranslation
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      *
@@ -99,7 +90,7 @@ class ArtWorkTranslation
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -109,7 +100,7 @@ class ArtWorkTranslation
     }
 
     /**
-     * Set materials
+     * Set materials.
      *
      * @param string $materials
      *
@@ -123,7 +114,7 @@ class ArtWorkTranslation
     }
 
     /**
-     * Get materials
+     * Get materials.
      *
      * @return string
      */
@@ -131,31 +122,4 @@ class ArtWorkTranslation
     {
         return $this->materials;
     }
-
-    /**
-     * Set slug
-     *
-     * @param string $slug
-     *
-     * @return ArtWorkTranslation
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-
 }
-

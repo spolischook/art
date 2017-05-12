@@ -23,6 +23,10 @@ abstract class AppKernel extends Kernel
             new Sonata\TranslationBundle\SonataTranslationBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new Sonata\MediaBundle\SonataMediaBundle(),
+            new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new AppBundle\AppBundle(),
         ];
 
