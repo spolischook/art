@@ -77,6 +77,8 @@ swiftmailer:
     spool: { type: memory }
 
 sonata_admin:
+    options:
+        html5_validate: false
     templates:
         layout: admin/layout.html.twig
 

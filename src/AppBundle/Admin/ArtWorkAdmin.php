@@ -39,7 +39,7 @@ class ArtWorkAdmin extends AbstractAdmin
                 )
                 ->add('materials', 'text', ['label' => 'Materials'])
 
-                ->add('width', 'integer', ['label' => 'Widht'])
+                ->add('width', 'integer', ['label' => 'Width'])
                 ->add('height', 'integer', ['label' => 'Height'])
 
                 ->add('price', 'money', [

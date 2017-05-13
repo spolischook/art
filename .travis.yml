@@ -7,15 +7,16 @@ cache:
     - $HOME/.composer/cache
 
 before_script:
-#  - printf "\n" | pecl install imagick
   - composer install
+  - mkdir -p $HOME/travis_phantomjs
+  - wget https://assets.membergetmember.co/software/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O $HOME/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2
+  - tar -xvf $HOME/travis_phantomjs/phantomjs-2.1.1-linux-x86_64.tar.bz2 -C $HOME/travis_phantomjs;
+  - $HOME/travis_phantomjs/phantomjs-2.1.1-linux-x86_64/bin/phantomjs --webdriver=8643 --ignore-ssl-errors=true --disk-cache=true > /dev/null 2>&1 &
   - bin/console doctrine:database:create
   - bin/console doctrine:schema:create
   - bin/console server:start
-#  - php -S localhost:8000 -t web/ &
-#  - sed -i -e 's/cherryart.local/localhost:8000/g' phpunit.xml.dist
 script:
-  - echo "Do nothing"
+  - bin/behat
 #  - bin/phpunit --coverage-clover=coverage.clover
 #  - wget https://scrutinizer-ci.com/ocular.phar
 #  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
