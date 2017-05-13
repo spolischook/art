@@ -8,7 +8,10 @@ cache:
 
 before_script:
 #  - printf "\n" | pecl install imagick
-#  - composer install
+  - composer install
+  - bin/console doctrine:database:create
+  - bin/console doctrine:schema:create
+  - bin/console server:start
 #  - php -S localhost:8000 -t web/ &
 #  - sed -i -e 's/cherryart.local/localhost:8000/g' phpunit.xml.dist
 script:
@@ -16,3 +19,6 @@ script:
 #  - bin/phpunit --coverage-clover=coverage.clover
 #  - wget https://scrutinizer-ci.com/ocular.phar
 #  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+after_script:
+  - bin/console server:stop
