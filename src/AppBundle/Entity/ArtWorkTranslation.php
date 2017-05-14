@@ -29,7 +29,7 @@ class ArtWorkTranslation
      * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="text")
      */
     private $description;
 
