@@ -12,6 +12,8 @@
 namespace Application\Sonata\MediaBundle\Entity;
 
 use AppBundle\Entity\ArtWork;
+use AppBundle\Entity\Exhibition;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -33,14 +35,24 @@ class Media extends BaseMedia
     protected $id;
 
     /**
-     * @var ArtWork
+     * @var ArrayCollection|ArtWork[]
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\ArtWork", inversedBy="images")
-     * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="artWork", referencedColumnName="id")
-     * })
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\ArtWork", mappedBy="images")
      */
-    private $artWork;
+    private $artWorks;
+
+    /**
+     * @var ArrayCollection|Exhibition[]
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Exhibition", mappedBy="photos")
+     */
+    private $exhibitions;
+
+    public function __construct()
+    {
+        $this->artWorks = new ArrayCollection();
+        $this->exhibitions = new ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -53,26 +65,92 @@ class Media extends BaseMedia
     }
 
     /**
-     * Set art work.
+     * Add exhibition.
      *
-     * @param ArtWork $artWork
+     * @param Exhibition $exhibition
      *
      * @return Media
      */
-    public function setArtWork(ArtWork $artWork)
+    public function addExhibition($exhibition)
     {
-        $this->artWork = $artWork;
+        if (!$exhibition) {
+            $this->exhibitions = new ArrayCollection();
+        }
+
+        if (!$this->exhibitions->contains($exhibition)) {
+            $this->exhibitions->add($exhibition);
+            $exhibition->addPhoto($this);
+        }
 
         return $this;
     }
 
     /**
-     * Get atr work.
+     * Remove exhibition.
      *
-     * @return ArtWork
+     * @param Exhibition $exhibition
+     *
+     * @return Media
      */
-    public function getArtWork()
+    public function removeExhibition($exhibition)
     {
-        return $this->artWork;
+        $this->getExhibitions()->removeElement($exhibition);
+
+        return $this;
+    }
+
+    /**
+     * Get exhibitions.
+     *
+     * @return ArrayCollection
+     */
+    public function getExhibitions()
+    {
+        return $this->exhibitions;
+    }
+
+    /**
+     * Add art work.
+     *
+     * @param ArtWork $artWork
+     *
+     * @return Media
+     */
+    public function addArtWork($artWork)
+    {
+        if (!$artWork) {
+            $this->artWorks = new ArrayCollection();
+        }
+
+        if (!$this->artWorks->contains($artWork)) {
+            $this->artWorks->add($artWork);
+            $artWork->addImages($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove art work.
+     *
+     * @param Media $artWork
+     *
+     * @return Media
+     */
+    public function removeArtWork($artWork)
+    {
+        $this->getArtWorks()->removeElement($artWork);
+
+        return $this;
+    }
+
+    /**
+     * Get art works.
+     *
+     * @return ArrayCollection
+     */
+    public function getArtWorks()
+    {
+        return $this->artWorks;
     }
 }

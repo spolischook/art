@@ -79,7 +79,7 @@ class ArtWork implements TranslatableInterface
 
     /**
      * @var bool
-     * @Assert\NotBlank()
+     *
      * @Assert\Type("bool")
      * @ORM\Column(name="in_published", type="boolean")
      */
@@ -87,23 +87,27 @@ class ArtWork implements TranslatableInterface
 
     /**
      * @var Media
-     *
-     * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media")
+     * @Assert\Type("object")
+     * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
      */
     private $picture;
 
     /**
      * @var ArrayCollection|Media[]
-     * @ORM\OneToMany(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", mappedBy="artWork", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="images", referencedColumnName="id")
-     * })
+     * @ORM\ManyToMany(targetEntity="Application\Sonata\MediaBundle\Entity\Media", inversedBy="artWorks")
      */
     private $images;
+
+    /**
+     * @var ArrayCollection|Exhibition[]
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Exhibition", inversedBy="artWorks")
+     */
+    private $exhibitions;
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->exhibitions = new ArrayCollection();
     }
 
     /**
@@ -395,7 +399,7 @@ class ArtWork implements TranslatableInterface
 
         if (!$this->images->contains($image)) {
             $this->images->add($image);
-            $image->setArtWork($this);
+            $image->addArtWork($this);
         }
 
         return $this;
@@ -418,11 +422,56 @@ class ArtWork implements TranslatableInterface
     /**
      * Get media.
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * Add exhibition.
+     *
+     * @param Exhibition $exhibition
+     *
+     * @return ArtWork
+     */
+    public function addExhibition($exhibition)
+    {
+        if (!$exhibition) {
+            $this->exhibitions = new ArrayCollection();
+        }
+
+        if (!$this->exhibitions->contains($exhibition)) {
+            $this->exhibitions->add($exhibition);
+            $exhibition->addArtWork($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove exhibition.
+     *
+     * @param Exhibition $exhibition
+     *
+     * @return ArtWork
+     */
+    public function removeExhibition($exhibition)
+    {
+        $this->getExhibitions()->removeElement($exhibition);
+
+        return $this;
+    }
+
+    /**
+     * Get exhibitions.
+     *
+     * @return ArrayCollection
+     */
+    public function getExhibitions()
+    {
+        return $this->exhibitions;
     }
 
     /**
