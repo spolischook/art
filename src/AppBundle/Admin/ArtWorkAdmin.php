@@ -76,12 +76,12 @@ class ArtWorkAdmin extends AbstractAdmin
                     ])
             ->add(
                 'images',
-                'sonata_type_collection',
+                'sonata_type_model',
                 [
                     'label' => 'Additional images',
+                    'multiple' => true,
                 ],
                 [
-                    'edit' => 'inline',
                     'inline' => 'table',
                     'sortable' => 'position',
                     'link_parameters' => [
@@ -97,7 +97,7 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('translations.title', null, array('label' => 'Title'))
+            ->add('translations.title', null, ['label' => 'Title'])
             ->add('date')
         ;
     }
@@ -105,18 +105,22 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('title', 'srting')
+            ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::SonataAdmin/avatar.html.twig'])
+            ->add('title', null, ['label' => 'Title'])
             ->add('date', 'date')
             ->add('price')
-            ->add('inStock')
-            ->add('isPublished')
-            ->add('_action', null, array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                ),
-            ))
+            ->add('inStock', null, [
+                'editable' => true,
+            ])
+            ->add('isPublished', null, [
+                'editable' => true,
+                ])
+            ->add('_action', null, [
+                'actions' => [
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 
