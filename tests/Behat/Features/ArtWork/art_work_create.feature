@@ -55,7 +55,7 @@ Feature: Art work create
       | Materials        | canvas, acrylic                 |
       | Width            | 60                              |
       | Height           | 80                              |
-#      | Picture          | sunset.jpg                |
+      | Picture          | sunset.jpg                |
 #      | Additional images | [sunset_in_progress1.jpg, sunset_in_progress2.jpg] |
     And fill in "Full description" with a 500 character
     When I press "Create"

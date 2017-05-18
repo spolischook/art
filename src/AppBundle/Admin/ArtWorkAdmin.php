@@ -139,7 +139,7 @@ class ArtWorkAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::SonataAdmin/avatar.html.twig'])
-            ->add('translations.title', 'string', ['label' => 'Title'])
+            ->add('title', 'string', ['label' => 'Title'])
             ->add('date', 'date')
             ->add('price')
             ->add('inStock', null, [
