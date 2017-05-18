@@ -10,6 +10,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Sonata\CoreBundle\Validator\ErrorElement;
 
 class ArtWorkAdmin extends AbstractAdmin
 {
@@ -52,6 +53,8 @@ class ArtWorkAdmin extends AbstractAdmin
                     'currency' => 'USD',
                     'grouping' => true,
                     'label' => 'Price',
+                    'required' => false,
+
                 ])
                 ->add('inStock', 'choice', [
                        'choices' => [
@@ -111,6 +114,17 @@ class ArtWorkAdmin extends AbstractAdmin
                     }
                 }
             });
+    }
+
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        if ($object->getIsPublished()) {
+            $errorElement
+                ->with('price')
+                ->assertNotBlank()
+                ->end()
+            ;
+        }
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)

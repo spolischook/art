@@ -72,7 +72,7 @@ class ArtWork implements TranslatableInterface
 
     /**
      * @var float
-     * @Assert\NotBlank()
+     *
      * @Assert\Type("float")
      * @ORM\Column(name="price", type="float")
      */
