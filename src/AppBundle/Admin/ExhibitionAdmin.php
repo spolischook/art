@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ExhibitionAdmin extends AbstractAdmin
 {
@@ -14,13 +15,15 @@ class ExhibitionAdmin extends AbstractAdmin
     {
         $formMapper
             ->with('Basic', ['class' => 'col-md-8'])
-            ->add('title', 'text', ['label' => 'Title'])
+            ->add('title', 'text', ['label' => 'Title', 'constraints' => [
+                new NotBlank(), ]])
             ->add('description', 'textarea',
                 [
                     'attr' => [
                         'style' => 'height:400px',
                     ],
                     'label' => 'Full description',
+                    'required' => false,
                 ])
             ->end()
             ->with('Status', ['class' => 'col-md-4'])
@@ -50,7 +53,8 @@ class ExhibitionAdmin extends AbstractAdmin
                 ]
 
             )
-            ->add('location', 'text')
+            ->add('location', 'text', ['constraints' => [
+                new NotBlank(), ]])
             ->add('facebookEvent', 'text')
             ->end()
             ->with('Art Works', ['class' => 'col-md-4'])

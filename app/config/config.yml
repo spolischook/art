@@ -91,7 +91,7 @@ sonata_translation:
     locales: [en, uk_ua]
     default_locale: en
     knplabs:
-        enabled: true
+            enabled: true
 sonata_media:
     db_driver: doctrine_orm
     default_context: default
@@ -126,3 +126,7 @@ sonata_media:
          local:
              directory:  "%kernel.root_dir%/../web/media"
              create:     false
+stof_doctrine_extensions:
+    orm:
+        default:
+            sluggable:   true

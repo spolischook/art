@@ -8,13 +8,15 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sonata\TranslationBundle\Model\TranslatableInterface;
 use Application\Sonata\MediaBundle\Entity\Media;
-use Symfony\Component\Validator\Tests\Fixtures\Entity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Exhibition.
  *
  * @ORM\Table(name="exhibition")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ExhibitionRepository")
+ * @UniqueEntity("slug")
  */
 class Exhibition implements TranslatableInterface
 {
@@ -32,11 +34,17 @@ class Exhibition implements TranslatableInterface
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     *
      * @Assert\Type("string")
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
-    private $slug;
+    private $name;
+
+    /**
+     * @Gedmo\Slug(fields={"name"}, updatable=true)
+     * @ORM\Column(length=255, unique=true)
+     */
+    protected $slug;
 
     /**
      * @var \DateTime
@@ -102,10 +110,11 @@ class Exhibition implements TranslatableInterface
      *
      * @param string $title
      *
-     * @return Entity
+     * @return Exhibition
      */
     public function setTitle($title)
     {
+        $this->name = $title;
         $this->translate(null, false)->setTitle($title);
 
         return $this;
@@ -146,27 +155,23 @@ class Exhibition implements TranslatableInterface
     }
 
     /**
-     * Set slug.
-     *
-     * @param string $slug
-     *
-     * @return Exhibition
-     */
-    public function setSlug($slug)
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
      * Get slug.
      *
-     * @return string
+     * @return mixed
      */
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return ArtWork
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**
@@ -395,5 +400,13 @@ class Exhibition implements TranslatableInterface
     public function getLocale()
     {
         return $this->getCurrentLocale();
+    }
+
+    /**
+     * @return array
+     */
+    public function getSluggableFields()
+    {
+        return ['title'];
     }
 }

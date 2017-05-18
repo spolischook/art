@@ -19,22 +19,24 @@ class ArtWorkTranslation
 
     /**
      * @var string
+     * @Assert\Valid()
      * @Assert\NotBlank()
      * @Assert\Type("string")
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
     private $title;
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     * @Assert\Valid()
      * @Assert\Type("string")
-     * @ORM\Column(name="description", type="text")
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var string
+     * @Assert\Valid()
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @ORM\Column(name="materials", type="string", length=255)

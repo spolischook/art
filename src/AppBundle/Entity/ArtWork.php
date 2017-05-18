@@ -8,12 +8,15 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sonata\TranslationBundle\Model\TranslatableInterface;
 use Application\Sonata\MediaBundle\Entity\Media;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ArtWork.
  *
  * @ORM\Table(name="art_work")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArtWorkRepository")
+ * @UniqueEntity("slug")
  */
 class ArtWork implements TranslatableInterface
 {
@@ -31,11 +34,17 @@ class ArtWork implements TranslatableInterface
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     *
      * @Assert\Type("string")
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
-    private $slug;
+    private $name;
+
+    /**
+     * @Gedmo\Slug(fields={"name"}, updatable=true)
+     * @ORM\Column(length=255, unique=true)
+     */
+    protected $slug;
 
     /**
      * @var int
@@ -71,7 +80,7 @@ class ArtWork implements TranslatableInterface
 
     /**
      * @var bool
-     * @Assert\NotBlank()
+     *
      * @Assert\Type("bool")
      * @ORM\Column(name="in_stock", type="boolean")
      */
@@ -86,7 +95,16 @@ class ArtWork implements TranslatableInterface
     private $isPublished;
 
     /**
+     * @var bool
+     *
+     * @Assert\Type("bool")
+     * @ORM\Column(name="was_published", type="boolean")
+     */
+    private $wasPublished;
+
+    /**
      * @var Media
+     * @Assert\NotBlank()
      * @Assert\Type("object")
      * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
      */
@@ -106,6 +124,8 @@ class ArtWork implements TranslatableInterface
 
     public function __construct()
     {
+        $this->isPublished = false;
+        $this->wasPublished = false;
         $this->images = new ArrayCollection();
         $this->exhibitions = new ArrayCollection();
     }
@@ -129,6 +149,7 @@ class ArtWork implements TranslatableInterface
      */
     public function setTitle($title)
     {
+        $this->name = $title;
         $this->translate(null, false)->setTitle($title);
 
         return $this;
@@ -142,6 +163,16 @@ class ArtWork implements TranslatableInterface
     public function getTitle()
     {
         return $this->translate(null, false)->getTitle();
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -193,8 +224,16 @@ class ArtWork implements TranslatableInterface
     }
 
     /**
-     * Set slug.
+     * Get slug.
      *
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
      * @param string $slug
      *
      * @return ArtWork
@@ -202,18 +241,6 @@ class ArtWork implements TranslatableInterface
     public function setSlug($slug)
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * Get slug.
-     *
-     * @return string
-     */
-    public function getSlug()
-    {
-        return $this->slug;
     }
 
     /**
@@ -343,9 +370,12 @@ class ArtWork implements TranslatableInterface
      *
      * @return ArtWork
      */
-    public function setIsPublished($inPublished)
+    public function setIsPublished($isPublished)
     {
-        $this->isPublished = $inPublished;
+        if ($isPublished) {
+            $this->wasPublished = true;
+        }
+        $this->isPublished = $isPublished;
 
         return $this;
     }
@@ -358,6 +388,16 @@ class ArtWork implements TranslatableInterface
     public function getIsPublished()
     {
         return $this->isPublished;
+    }
+
+    /**
+     * Get wasPublished.
+     *
+     * @return bool
+     */
+    public function getWasPublished()
+    {
+        return $this->wasPublished;
     }
 
     /**

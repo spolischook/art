@@ -7,6 +7,9 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class ArtWorkAdmin extends AbstractAdmin
 {
@@ -14,13 +17,15 @@ class ArtWorkAdmin extends AbstractAdmin
     {
         $formMapper
             ->with('Basic', ['class' => 'col-md-8'])
-                ->add('title', 'text', ['label' => 'Title'])
+                ->add('title', 'text', ['label' => 'Title', 'constraints' => [
+                    new NotBlank(), ]])
                 ->add('description', 'textarea',
                     [
                         'attr' => [
                             'style' => 'height:400px',
                         ],
                         'label' => 'Full description',
+                        'required' => false,
                     ])
              ->end()
              ->with('Properties', ['class' => 'col-md-4'])
@@ -37,7 +42,8 @@ class ArtWorkAdmin extends AbstractAdmin
                 ]
 
                 )
-                ->add('materials', 'text', ['label' => 'Materials'])
+                ->add('materials', 'text', ['label' => 'Materials', 'constraints' => [
+                    new NotBlank(), ]])
 
                 ->add('width', 'integer', ['label' => 'Width'])
                 ->add('height', 'integer', ['label' => 'Height'])
@@ -56,12 +62,12 @@ class ArtWorkAdmin extends AbstractAdmin
                 ->add('isPublished', 'choice', [
                    'choices' => [
                     'On front' => true,
-                    'Not active' => false,
+                    'Unpublished' => false,
                    ],
                 ])
             ->end()
             ->with('Info', ['class' => 'col-md-8'])
-                ->add('slug', 'text', ['label' => 'Slug'])
+                ->add('slug', 'text', ['label' => 'Slug', 'required' => false])
                 ->add(
                     'picture',
                     'sonata_type_model_list',
@@ -80,6 +86,7 @@ class ArtWorkAdmin extends AbstractAdmin
                 [
                     'label' => 'Additional images',
                     'multiple' => true,
+                    'required' => false,
                 ],
                 [
                     'inline' => 'table',
@@ -92,6 +99,18 @@ class ArtWorkAdmin extends AbstractAdmin
             )
             ->end()
         ;
+
+        $formMapper->getFormBuilder()->addEventListener(FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formMapper) {
+                $artWork = $event->getData();
+                $form = $event->getForm();
+                if ($artWork) {
+                    if ($artWork->getWasPublished()) {
+                        $form->remove('slug');
+                        $form->add('slug', 'text', ['label' => 'Slug', 'required' => false, 'disabled' => true]);
+                    }
+                }
+            });
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
@@ -106,7 +125,7 @@ class ArtWorkAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::SonataAdmin/avatar.html.twig'])
-            ->add('title', null, ['label' => 'Title'])
+            ->add('translations.title', 'string', ['label' => 'Title'])
             ->add('date', 'date')
             ->add('price')
             ->add('inStock', null, [
