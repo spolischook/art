@@ -67,6 +67,18 @@ doctrine:
         mappings:
               ApplicationSonataMediaBundle: ~
               SonataMediaBundle: ~
+              gedmo_translatable:
+                    type: annotation
+                    prefix: Gedmo\Translatable\Entity
+                    dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
+                    alias: GedmoTranslatable
+                    is_bundle: false
+              gedmo_translator:
+                    type: annotation
+                    prefix: Gedmo\Translator\Entity
+                    dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translator/Entity"
+                    alias: GedmoTranslator # (optional) it will default to the name set for the mapping
+                    is_bundle: false
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -90,8 +102,8 @@ sonata_block:
 sonata_translation:
     locales: [en, uk_ua]
     default_locale: en
-    knplabs:
-            enabled: true
+    gedmo:
+        enabled: true
 sonata_media:
     db_driver: doctrine_orm
     default_context: default
@@ -127,6 +139,9 @@ sonata_media:
              directory:  "%kernel.root_dir%/../web/media"
              create:     false
 stof_doctrine_extensions:
+    default_locale: "%locale%"
+    translation_fallback: true
     orm:
         default:
             sluggable:   true
+            translatable: true

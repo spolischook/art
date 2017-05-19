@@ -6,22 +6,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
-use Sonata\TranslationBundle\Model\TranslatableInterface;
+use Sonata\TranslationBundle\Model\Gedmo\TranslatableInterface;
 use Application\Sonata\MediaBundle\Entity\Media;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Sonata\TranslationBundle\Model\Gedmo\AbstractPersonalTranslatable;
 
 /**
  * ArtWork.
  *
  * @ORM\Table(name="art_work")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArtWorkRepository")
+ * @Gedmo\TranslationEntity(class="AppBundle\Entity\ArtWorkTranslation")
  * @UniqueEntity("slug")
  */
-class ArtWork implements TranslatableInterface
+class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterface
 {
     use ORMBehaviors\Timestampable\Timestampable;
-    use ORMBehaviors\Translatable\Translatable;
 
     /**
      * @var int
@@ -34,14 +35,35 @@ class ArtWork implements TranslatableInterface
 
     /**
      * @var string
-     *
+     * @Assert\Valid()
+     * @Assert\NotBlank()
      * @Assert\Type("string")
+     * @Gedmo\Translatable
      * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
-    private $name;
+    private $title;
 
     /**
-     * @Gedmo\Slug(fields={"name"}, updatable=true)
+     * @var string
+     * @Assert\Valid()
+     * @Assert\Type("string")
+     * @Gedmo\Translatable
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     * @Assert\Valid()
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Gedmo\Translatable
+     * @ORM\Column(name="materials", type="string", length=255)
+     */
+    private $materials;
+
+    /**
+     * @Gedmo\Slug(fields={"title"}, updatable=true)
      * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
@@ -122,8 +144,20 @@ class ArtWork implements TranslatableInterface
      */
     private $exhibitions;
 
+    /**
+     * @var ArrayCollection|ArtWorkTranslation[]
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\ArtWorkTranslation",
+     *     mappedBy="object",
+     *     cascade={"persist", "remove"}
+     * )
+     */
+    protected $translations;
+
     public function __construct()
     {
+        parent::__construct();
         $this->isPublished = false;
         $this->wasPublished = false;
         $this->images = new ArrayCollection();
@@ -149,8 +183,7 @@ class ArtWork implements TranslatableInterface
      */
     public function setTitle($title)
     {
-        $this->name = $title;
-        $this->translate(null, false)->setTitle($title);
+        $this->title = $title;
 
         return $this;
     }
@@ -162,17 +195,7 @@ class ArtWork implements TranslatableInterface
      */
     public function getTitle()
     {
-        return $this->translate(null, false)->getTitle();
-    }
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        return $this->title;
     }
 
     /**
@@ -184,7 +207,7 @@ class ArtWork implements TranslatableInterface
      */
     public function setDescription($description)
     {
-        $this->translate(null, false)->setDescription($description);
+        $this->description = $description;
 
         return $this;
     }
@@ -196,7 +219,7 @@ class ArtWork implements TranslatableInterface
      */
     public function getDescription()
     {
-        return $this->translate(null, false)->getDescription();
+        return $this->description;
     }
 
     /**
@@ -208,7 +231,7 @@ class ArtWork implements TranslatableInterface
      */
     public function setMaterials($materials)
     {
-        $this->translate(null, false)->setMaterials($materials);
+        $this->materials = $materials;
 
         return $this;
     }
@@ -220,7 +243,7 @@ class ArtWork implements TranslatableInterface
      */
     public function getMaterials()
     {
-        return $this->translate(null, false)->getMaterials();
+        return $this->materials;
     }
 
     /**
@@ -241,6 +264,8 @@ class ArtWork implements TranslatableInterface
     public function setSlug($slug)
     {
         $this->slug = $slug;
+
+        return $this;
     }
 
     /**
@@ -512,23 +537,5 @@ class ArtWork implements TranslatableInterface
     public function getExhibitions()
     {
         return $this->exhibitions;
-    }
-
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->setCurrentLocale($locale);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->getCurrentLocale();
     }
 }

@@ -1,0 +1,5 @@
+{% extends 'SonataAdminBundle:CRUD:edit.html.twig.html.twig' %}
+
+{% block field%}
+    {% thumbnail attribute(object, field_description.name ), 'admin' with {'width': 60, 'height': 75} %}
+{% endblock %}

@@ -5,26 +5,38 @@ parameters:
 
 services:
     admin.artwork:
-        class: AppBundle\Admin\ArtWorkAdmin
-        tags:
-            - name: sonata.admin
-              manager_type: orm
-              group: "ArtWork"
-              label: "ArtWork"
-              label_catalogue: "AppBundle"
-        arguments:
-             - ~
-             - AppBundle\Entity\ArtWork
-             - ~
-    admin.exhibition:
-            class: AppBundle\Admin\ExhibitionAdmin
+            class: AppBundle\Admin\ArtWorkAdmin
             tags:
                 - name: sonata.admin
                   manager_type: orm
-                  group: "Exhibition"
-                  label: "Exhibition"
-                  label_catalogue: "Exhibition"
+                  group: "ArtWork"
+                  label: "ArtWork"
+                  label_catalogue: "AppBundle"
+            arguments:
+                 - ~
+                 - AppBundle\Entity\ArtWork
+                 - ~
+    admin.exhibition:
+            class: AppBundle\Admin\ExhibitionAdmin
+            tags:
+                 - name: sonata.admin
+                   manager_type: orm
+                   group: "Exhibition"
+                   label: "Exhibition"
+                   label_catalogue: "Exhibition"
             arguments:
                  - ~
                  - AppBundle\Entity\Exhibition
                  - ~
+    admin.faqcategory:
+            class: AppBundle\Admin\FAQCategoryAdmin
+            tags:
+                - name: sonata.admin
+                  manager_type: orm
+                  group: "Category"
+                  label: "Category"
+                  label_catalogue: "Category"
+            arguments:
+                - ~
+                - AppBundle\Entity\FAQCategory
+                - ~

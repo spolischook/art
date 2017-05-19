@@ -7,7 +7,6 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Sonata\CoreBundle\Validator\ErrorElement;
@@ -18,8 +17,7 @@ class ArtWorkAdmin extends AbstractAdmin
     {
         $formMapper
             ->with('Basic', ['class' => 'col-md-8'])
-                ->add('title', 'text', ['label' => 'Title', 'constraints' => [
-                    new NotBlank(), ]])
+                ->add('title', 'text', ['label' => 'Title'])
                 ->add('description', 'textarea',
                     [
                         'attr' => [
@@ -43,12 +41,9 @@ class ArtWorkAdmin extends AbstractAdmin
                 ]
 
                 )
-                ->add('materials', 'text', ['label' => 'Materials', 'constraints' => [
-                    new NotBlank(), ]])
-
+                ->add('materials', 'text', ['label' => 'Materials'])
                 ->add('width', 'integer', ['label' => 'Width'])
                 ->add('height', 'integer', ['label' => 'Height'])
-
                 ->add('price', 'money', [
                     'currency' => 'USD',
                     'grouping' => true,
@@ -130,7 +125,7 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('translations.title', null, ['label' => 'Title'])
+            ->add('title', null, ['label' => 'Title'])
             ->add('date')
         ;
     }
@@ -138,7 +133,7 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::SonataAdmin/avatar.html.twig'])
+            ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::admin/avatar.html.twig'])
             ->add('title', 'string', ['label' => 'Title'])
             ->add('date', 'date')
             ->add('price')
