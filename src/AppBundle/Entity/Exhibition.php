@@ -61,7 +61,7 @@ class Exhibition extends AbstractPersonalTranslatable implements TranslatableInt
     private $locationPlace;
 
     /**
-     * @Gedmo\Slug(fields={"title"}, updatable=true)
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
      * @ORM\Column(length=255, unique=true)
      */
     protected $slug;

@@ -28,15 +28,4 @@ services:
                  - ~
                  - AppBundle\Entity\Exhibition
                  - ~
-    admin.faqcategory:
-            class: AppBundle\Admin\FAQCategoryAdmin
-            tags:
-                - name: sonata.admin
-                  manager_type: orm
-                  group: "Category"
-                  label: "Category"
-                  label_catalogue: "Category"
-            arguments:
-                - ~
-                - AppBundle\Entity\FAQCategory
-                - ~
+    

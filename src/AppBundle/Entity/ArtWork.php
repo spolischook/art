@@ -63,7 +63,7 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
     private $materials;
 
     /**
-     * @Gedmo\Slug(fields={"title"}, updatable=true)
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
      * @ORM\Column(length=255, unique=true)
      */
     protected $slug;
