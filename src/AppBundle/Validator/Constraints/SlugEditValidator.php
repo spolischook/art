@@ -28,7 +28,7 @@ class SlugEditValidator extends ConstraintValidator
             $dbObject = $this->doctrine->getRepository('AppBundle:ArtWork')->find($artWork->getId());
             $newSlug = $artWork->getSlug();
             $oldSlug = $dbObject->getSlug();
-            if($oldSlug != $newSlug){
+            if($dbObject->getWasPublished() && $oldSlug != $newSlug){
                 $this->context->buildViolation($constraint->message)
                     ->atPath('slug')
                     ->addViolation();
