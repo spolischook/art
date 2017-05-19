@@ -4,36 +4,33 @@ namespace AppBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 
 /**
-* @Annotation
-*/
+ * @Annotation
+ */
 class SlugEditValidator extends ConstraintValidator
 {
-    /**
-     * @var Registry
-     */
-    protected $doctrine;
+    protected $em;
 
-    public function __construct(Registry $doctrine)
+    public function __construct(EntityManager $em)
     {
-        $this->doctrine = $doctrine;
+        $this->em = $em;
     }
 
     public function validate($artWork, Constraint $constraint)
     {
-
         if ($artWork->getId()) {
-            $dbObject = $this->doctrine->getRepository('AppBundle:ArtWork')->find($artWork->getId());
+            $dbObject = $this->em
+                ->getUnitOfWork()
+                ->getOriginalEntityData($artWork);
             $newSlug = $artWork->getSlug();
-            $oldSlug = $dbObject->getSlug();
-            if($dbObject->getWasPublished() && $oldSlug != $newSlug){
+            $oldSlug = $dbObject['slug'];
+            if ($dbObject['wasPublished'] && $oldSlug != $newSlug) {
                 $this->context->buildViolation($constraint->message)
                     ->atPath('slug')
                     ->addViolation();
             }
-
         }
     }
 }

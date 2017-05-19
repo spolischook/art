@@ -7,8 +7,6 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Sonata\CoreBundle\Validator\ErrorElement;
 
 class ArtWorkAdmin extends AbstractAdmin
@@ -97,18 +95,6 @@ class ArtWorkAdmin extends AbstractAdmin
             )
             ->end()
         ;
-
-        $formMapper->getFormBuilder()->addEventListener(FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formMapper) {
-                $artWork = $event->getData();
-                $form = $event->getForm();
-                if ($artWork) {
-                    if ($artWork->getWasPublished()) {
-                        $form->remove('slug');
-                        $form->add('slug', 'text', ['label' => 'Slug', 'required' => false, 'disabled' => true]);
-                    }
-                }
-            });
     }
 
     public function validate(ErrorElement $errorElement, $object)

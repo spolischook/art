@@ -5,8 +5,8 @@ namespace AppBundle\Validator\Constraints;
 use Symfony\Component\Validator\Constraint;
 
 /**
-* @Annotation
-*/
+ * @Annotation
+ */
 class SlugEdit extends Constraint
 {
     public $message = "Slug shouldn't be edited because art work has been already published";
