@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Validator\Constraints\ArtWorkValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
@@ -11,6 +12,7 @@ use Application\Sonata\MediaBundle\Entity\Media;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Sonata\TranslationBundle\Model\Gedmo\AbstractPersonalTranslatable;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * ArtWork.
@@ -19,6 +21,7 @@ use Sonata\TranslationBundle\Model\Gedmo\AbstractPersonalTranslatable;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArtWorkRepository")
  * @Gedmo\TranslationEntity(class="AppBundle\Entity\ArtWorkTranslation")
  * @UniqueEntity("slug")
+ * @AppAssert\SlugEdit
  */
 class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterface
 {
@@ -96,7 +99,7 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
      * @var float
      *
      * @Assert\Type("float")
-     * @ORM\Column(name="price", type="float")
+     * @ORM\Column(name="price", type="float", nullable=true)
      */
     private $price;
 

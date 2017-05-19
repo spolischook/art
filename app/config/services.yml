@@ -28,4 +28,8 @@ services:
                  - ~
                  - AppBundle\Entity\Exhibition
                  - ~
-    
+ #   app.contains_slug_edit_validator:
+ #           class: AppBundle\Validator\Constraints\SlugEditValidator
+ #           arguments: ['@doctrine']
+ #           tags:
+ #               - { name: validator.constraint_validator }
