@@ -126,7 +126,7 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
 
     /**
      * @var Media
-     * @Assert\NotBlank()
+     *
      * @Assert\Type("object")
      * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
      */
