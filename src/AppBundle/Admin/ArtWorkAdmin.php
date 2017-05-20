@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\CoreBundle\Validator\ErrorElement;
 
 class ArtWorkAdmin extends AbstractAdmin
 {
@@ -21,6 +22,7 @@ class ArtWorkAdmin extends AbstractAdmin
                             'style' => 'height:400px',
                         ],
                         'label' => 'Full description',
+                        'required' => false,
                     ])
              ->end()
              ->with('Properties', ['class' => 'col-md-4'])
@@ -38,14 +40,14 @@ class ArtWorkAdmin extends AbstractAdmin
 
                 )
                 ->add('materials', 'text', ['label' => 'Materials'])
-
                 ->add('width', 'integer', ['label' => 'Width'])
                 ->add('height', 'integer', ['label' => 'Height'])
-
                 ->add('price', 'money', [
                     'currency' => 'USD',
                     'grouping' => true,
                     'label' => 'Price',
+                    'required' => false,
+
                 ])
                 ->add('inStock', 'choice', [
                        'choices' => [
@@ -56,12 +58,12 @@ class ArtWorkAdmin extends AbstractAdmin
                 ->add('isPublished', 'choice', [
                    'choices' => [
                     'On front' => true,
-                    'Not active' => false,
+                    'Unpublished' => false,
                    ],
                 ])
             ->end()
             ->with('Info', ['class' => 'col-md-8'])
-                ->add('slug', 'text', ['label' => 'Slug'])
+                ->add('slug', 'text', ['label' => 'Slug', 'required' => false])
                 ->add(
                     'picture',
                     'sonata_type_model_list',
@@ -80,6 +82,7 @@ class ArtWorkAdmin extends AbstractAdmin
                 [
                     'label' => 'Additional images',
                     'multiple' => true,
+                    'required' => false,
                 ],
                 [
                     'inline' => 'table',
@@ -94,10 +97,21 @@ class ArtWorkAdmin extends AbstractAdmin
         ;
     }
 
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        if ($object->getIsPublished()) {
+            $errorElement
+                ->with('price')
+                ->assertNotBlank()
+                ->end()
+            ;
+        }
+    }
+
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('translations.title', null, ['label' => 'Title'])
+            ->add('title', null, ['label' => 'Title'])
             ->add('date')
         ;
     }
@@ -105,8 +119,8 @@ class ArtWorkAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::SonataAdmin/avatar.html.twig'])
-            ->add('title', null, ['label' => 'Title'])
+            ->add('picture', 'srting', ['label' => 'Main image', 'template' => '::admin/avatar.html.twig'])
+            ->add('title', 'string', ['label' => 'Title'])
             ->add('date', 'date')
             ->add('price')
             ->add('inStock', null, [

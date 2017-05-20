@@ -5,26 +5,31 @@ parameters:
 
 services:
     admin.artwork:
-        class: AppBundle\Admin\ArtWorkAdmin
-        tags:
-            - name: sonata.admin
-              manager_type: orm
-              group: "ArtWork"
-              label: "ArtWork"
-              label_catalogue: "AppBundle"
-        arguments:
-             - ~
-             - AppBundle\Entity\ArtWork
-             - ~
-    admin.exhibition:
-            class: AppBundle\Admin\ExhibitionAdmin
+            class: AppBundle\Admin\ArtWorkAdmin
             tags:
                 - name: sonata.admin
                   manager_type: orm
-                  group: "Exhibition"
-                  label: "Exhibition"
-                  label_catalogue: "Exhibition"
+                  group: "ArtWork"
+                  label: "ArtWork"
+                  label_catalogue: "AppBundle"
+            arguments:
+                 - ~
+                 - AppBundle\Entity\ArtWork
+                 - ~
+    admin.exhibition:
+            class: AppBundle\Admin\ExhibitionAdmin
+            tags:
+                 - name: sonata.admin
+                   manager_type: orm
+                   group: "Exhibition"
+                   label: "Exhibition"
+                   label_catalogue: "Exhibition"
             arguments:
                  - ~
                  - AppBundle\Entity\Exhibition
                  - ~
+    app.contains_slug_edit_validator:
+            class: AppBundle\Validator\Constraints\SlugEditValidator
+            arguments: ['@doctrine.orm.entity_manager']
+            tags:
+                - { name: validator.constraint_validator }

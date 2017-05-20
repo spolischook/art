@@ -21,6 +21,7 @@ class ExhibitionAdmin extends AbstractAdmin
                         'style' => 'height:400px',
                     ],
                     'label' => 'Full description',
+                    'required' => false,
                 ])
             ->end()
             ->with('Status', ['class' => 'col-md-4'])
@@ -50,7 +51,7 @@ class ExhibitionAdmin extends AbstractAdmin
                 ]
 
             )
-            ->add('location', 'text')
+            ->add('locationPlace', 'text', ['label' => 'Location'])
             ->add('facebookEvent', 'text')
             ->end()
             ->with('Art Works', ['class' => 'col-md-4'])
@@ -105,17 +106,17 @@ class ExhibitionAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('translations.title', null, ['label' => 'Title'])
-            ->add('translations.location', null, ['label' => 'Location'])
+            ->add('title', null, ['label' => 'Title'])
+            ->add('locationPlace', null, ['label' => 'Location'])
             ->add('openDateTime', null, ['label' => 'Date']);
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('poster', 'srting', ['label' => 'Poster', 'template' => '::SonataAdmin/avatar.html.twig'])
+            ->add('poster', 'srting', ['label' => 'Poster', 'template' => '::admin/avatar.html.twig'])
             ->add('title', 'srting')
-            ->add('location', 'srting')
+            ->add('locationPlace', 'srting', ['label' => 'Poster'])
             ->add('openDateTime', 'date', ['label' => 'Date'])
             ->add('_action', null, [
                 'actions' => [

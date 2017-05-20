@@ -6,20 +6,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
-use Sonata\TranslationBundle\Model\TranslatableInterface;
+use Sonata\TranslationBundle\Model\Gedmo\TranslatableInterface;
+use Sonata\TranslationBundle\Model\Gedmo\AbstractPersonalTranslatable;
 use Application\Sonata\MediaBundle\Entity\Media;
-use Symfony\Component\Validator\Tests\Fixtures\Entity;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Exhibition.
  *
  * @ORM\Table(name="exhibition")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ExhibitionRepository")
+ * @Gedmo\TranslationEntity(class="AppBundle\Entity\ExhibitionTranslation")
+ * @UniqueEntity("slug")
  */
-class Exhibition implements TranslatableInterface
+class Exhibition extends AbstractPersonalTranslatable implements TranslatableInterface
 {
     use ORMBehaviors\Timestampable\Timestampable;
-    use ORMBehaviors\Translatable\Translatable;
 
     /**
      * @var int
@@ -34,9 +37,34 @@ class Exhibition implements TranslatableInterface
      * @var string
      * @Assert\NotBlank()
      * @Assert\Type("string")
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @Gedmo\Translatable
+     * @ORM\Column(name="title", type="string", length=255, unique=true)
      */
-    private $slug;
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @Assert\Type("string")
+     * @Gedmo\Translatable
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @Assert\Type("string")
+     * @Gedmo\Translatable
+     * @ORM\Column(name="location_place", type="string", length=255)
+     */
+    private $locationPlace;
+
+    /**
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
+     * @ORM\Column(length=255, unique=true)
+     */
+    protected $slug;
 
     /**
      * @var \DateTime
@@ -81,10 +109,23 @@ class Exhibition implements TranslatableInterface
      */
     private $photos;
 
+    /**
+     * @var ArrayCollection|ExhibitionTranslation[]
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\ExhibitionTranslation",
+     *     mappedBy="object",
+     *     cascade={"persist", "remove"}
+     * )
+     */
+    protected $translations;
+
     public function __construct()
     {
+        parent::__construct();
         $this->images = new ArrayCollection();
         $this->photos = new ArrayCollection();
+        $this->translations = new ArrayCollection();
     }
 
     /**
@@ -102,11 +143,11 @@ class Exhibition implements TranslatableInterface
      *
      * @param string $title
      *
-     * @return Entity
+     * @return Exhibition
      */
     public function setTitle($title)
     {
-        $this->translate(null, false)->setTitle($title);
+        $this->title = $title;
 
         return $this;
     }
@@ -118,7 +159,7 @@ class Exhibition implements TranslatableInterface
      */
     public function getTitle()
     {
-        return $this->translate(null, false)->getTitle();
+        return $this->title;
     }
 
     /**
@@ -130,7 +171,7 @@ class Exhibition implements TranslatableInterface
      */
     public function setDescription($description)
     {
-        $this->translate(null, false)->setDescription($description);
+        $this->description = $description;
 
         return $this;
     }
@@ -142,31 +183,50 @@ class Exhibition implements TranslatableInterface
      */
     public function getDescription()
     {
-        return $this->translate(null, false)->getDescription();
+        return $this->description;
     }
 
     /**
-     * Set slug.
+     * Set location.
      *
-     * @param string $slug
+     * @param string $location
      *
      * @return Exhibition
      */
-    public function setSlug($slug)
+    public function setLocationPlace($location)
     {
-        $this->slug = $slug;
+        $this->locationPlace = $location;
 
         return $this;
     }
 
     /**
-     * Get slug.
+     * Get location.
      *
      * @return string
+     */
+    public function getLocationPlace()
+    {
+        return $this->locationPlace;
+    }
+    /**
+     * Get slug.
+     *
+     * @return mixed
      */
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return ArtWork
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**
@@ -239,30 +299,6 @@ class Exhibition implements TranslatableInterface
     public function getFacebookEvent()
     {
         return $this->facebookEvent;
-    }
-
-    /**
-     * Set location.
-     *
-     * @param string $location
-     *
-     * @return Exhibition
-     */
-    public function setLocation($location)
-    {
-        $this->translate(null, false)->setLocation($location);
-
-        return $this;
-    }
-
-    /**
-     * Get location.
-     *
-     * @return string
-     */
-    public function getLocation()
-    {
-        return $this->translate(null, false)->getLocation();
     }
 
     /**
@@ -377,23 +413,5 @@ class Exhibition implements TranslatableInterface
     public function getPhotos()
     {
         return $this->photos;
-    }
-
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->setCurrentLocale($locale);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocale()
-    {
-        return $this->getCurrentLocale();
     }
 }
