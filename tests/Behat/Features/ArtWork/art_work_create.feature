@@ -10,7 +10,6 @@ Feature: Art work create
 #      | Is Published     | Unpublished                     |
       | In Stock         | Available                       |
 
-  @skip
   Scenario: Required fields for archive art works
     Given I open "Art Work Create Page"
     And fill form with:
@@ -48,8 +47,6 @@ Feature: Art work create
     Given I open "Art Work Create Page"
     And fill form with:
       | Title            | Sunset on koh Samui             |
-#      Slug should be removed
-      | Slug             | sunset-on-koh-samui             |
       | Creation date    | 15/05/2017                      |
       | Price            | 100500                          |
       | Materials        | canvas, acrylic                 |
@@ -57,6 +54,7 @@ Feature: Art work create
       | Height           | 80                              |
 #      | Picture          | sunset.jpg                |
 #      | Additional images | [sunset_in_progress1.jpg, sunset_in_progress2.jpg] |
+#    And other fields has no errors
     And fill in "Full description" with a 500 character
     When I press "Create"
     Then I should see "Item \"Sunset on koh Samui\" has been successfully created."

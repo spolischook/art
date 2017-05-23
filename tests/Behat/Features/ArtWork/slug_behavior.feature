@@ -42,3 +42,6 @@ Feature: Slug behavior
     But I fill in "Is Published" with "On front"
     And press "Create"
     Then field "Slug" should be not editable
+    But I fill in "Is Published" with "Unpublished"
+    And press "Create"
+    Then field "Slug" should be not editable

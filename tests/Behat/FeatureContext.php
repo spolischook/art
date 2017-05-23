@@ -2,10 +2,12 @@
 
 namespace Tests\Behat;
 
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\RawMinkContext;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use SensioLabs\Behat\PageObjectExtension\Context\PageObjectAware;
 use Tests\Behat\Elements\SonataAdminForm;
 use Tests\Behat\Elements\SonataField;
@@ -23,14 +25,23 @@ class FeatureContext extends RawMinkContext implements PageObjectAware
     /**
      * @var array
      */
-    protected $assertedFields;
+    protected $assertedFields = [];
 
     /**
      * @param $event
-     * @BeforeScenario
+     * @AfterStep
      */
-    public function before($event)
+    public function afterStep(AfterStepScope $event)
     {
+    }
+
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(BeforeSuiteScope $event)
+    {
+        // prepare system for test suite
+        // before it runs
     }
 
     /**

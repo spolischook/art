@@ -2,6 +2,7 @@
 
 namespace AppBundle\Validator\Constraints;
 
+use AppBundle\Entity\ArtWork;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\EntityManager;
@@ -11,26 +12,47 @@ use Doctrine\ORM\EntityManager;
  */
 class SlugEditValidator extends ConstraintValidator
 {
+    /**
+     * @var EntityManager
+     */
     protected $em;
 
+    /**
+     * @param EntityManager $em
+     */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
 
+    /**
+     * @param ArtWork $artWork
+     * {@inheritdoc}
+     */
     public function validate($artWork, Constraint $constraint)
     {
-        if ($artWork->getId()) {
-            $dbObject = $this->em
-                ->getUnitOfWork()
-                ->getOriginalEntityData($artWork);
-            $newSlug = $artWork->getSlug();
-            $oldSlug = $dbObject['slug'];
-            if ($dbObject['wasPublished'] && $oldSlug != $newSlug) {
-                $this->context->buildViolation($constraint->message)
-                    ->atPath('slug')
-                    ->addViolation();
-            }
+        if (!is_object($artWork)) {
+            return;
+        }
+
+        if (ArtWork::class !== get_class($artWork)) {
+            return;
+        }
+
+        if (!$artWork->getId()) {
+            return;
+        }
+
+        $dbObject = $this->em
+            ->getUnitOfWork()
+            ->getOriginalEntityData($artWork);
+        $newSlug = $artWork->getSlug();
+        $oldSlug = $dbObject['slug'];
+
+        if ($dbObject['wasPublished'] && $oldSlug != $newSlug) {
+            $this->context->buildViolation($constraint->message)
+                ->atPath('slug')
+                ->addViolation();
         }
     }
 }

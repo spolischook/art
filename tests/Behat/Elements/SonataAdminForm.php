@@ -66,7 +66,7 @@ class SonataAdminForm extends Element
             list($label, $value) = $row;
             /** @var SonataField $field */
             $field = $this->findField($label);
-            Assert::implementsInterface($field, SonataField::class);
+            Assert::implementsInterface($field, SonataField::class, sprintf('Create class for "%s" field', $label));
             $error = $field->getError();
 
             Assert::notNull($error, sprintf('Field "%s" has no error', $label));
