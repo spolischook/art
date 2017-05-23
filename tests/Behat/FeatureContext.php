@@ -27,36 +27,6 @@ class FeatureContext extends RawMinkContext implements PageObjectAware
      */
     protected $assertedFields = [];
 
-    /**
-     * @param $event
-     * @AfterStep
-     */
-    public function afterStep(AfterStepScope $event)
-    {
-        if (false == $event->getTestResult()->isPassed()) {
-            $filename = uniqid('screenshot_', true).'.png';
-            $path = __DIR__.'/../../web/'.$filename;
-            $baseUrl = preg_replace('/app.*$/i', '', $this->getMinkParameter('base_url'));
-            $url = $baseUrl.$filename;
-            file_put_contents($path, $this->getSession()->getDriver()->getScreenshot());
-            fwrite(STDOUT, "    \e[103m\e[91mStep is not passed, screenshot: ".$url."\e[0m\n");
-        }
-    }
-
-    /**
-     * @BeforeSuite
-     */
-    public static function prepare(BeforeSuiteScope $event)
-    {
-        $files = glob(__DIR__."/../../web/*.png");
-        if (!$files) {
-            return; // do nothing if error or no files match
-        }
-
-        foreach($files as $file) {
-            unlink($file);
-        }
-    }
 
     public function __construct()
     {
