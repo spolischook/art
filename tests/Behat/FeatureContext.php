@@ -33,6 +33,14 @@ class FeatureContext extends RawMinkContext implements PageObjectAware
      */
     public function afterStep(AfterStepScope $event)
     {
+        if (false == $event->getTestResult()->isPassed()) {
+            $filename = uniqid('screenshot_', true).'.png';
+            $path = __DIR__.'/../../web/'.$filename;
+            $baseUrl = preg_replace('/app.*$/i', '', $this->getMinkParameter('base_url'));
+            $url = $baseUrl.$filename;
+            file_put_contents($path, $this->getSession()->getDriver()->getScreenshot());
+            fwrite(STDOUT, "    \e[103m\e[91mStep is not passed, screenshot: ".$url."\e[0m\n");
+        }
     }
 
     /**
@@ -40,16 +48,14 @@ class FeatureContext extends RawMinkContext implements PageObjectAware
      */
     public static function prepare(BeforeSuiteScope $event)
     {
-        // prepare system for test suite
-        // before it runs
-    }
+        $files = glob(__DIR__."/../../web/*.png");
+        if (!$files) {
+            return; // do nothing if error or no files match
+        }
 
-    /**
-     * @param $event
-     * @AfterScenario
-     */
-    public function after($event)
-    {
+        foreach($files as $file) {
+            unlink($file);
+        }
     }
 
     public function __construct()

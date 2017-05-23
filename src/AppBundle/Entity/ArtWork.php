@@ -130,8 +130,7 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
      * @var Media
      *
      * @Assert\Type("object")
-     * @Assert\NotBlank()
-     * @Assert\NotNull()
+     * @Assert\NotNull(message="Picture is mandatory field.")
      * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
      */
     private $picture;
