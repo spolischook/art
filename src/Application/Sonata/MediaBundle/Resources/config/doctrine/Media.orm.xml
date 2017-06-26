@@ -16,10 +16,7 @@
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
-        <many-to-many field="artWorks" target-entity="AppBundle\Entity\ArtWork" mapped-by="images">
-        </many-to-many>
-        <many-to-many field="exhibitions" target-entity="AppBundle\Entity\Exhibition" mapped-by="photos">
-        </many-to-many>
+
 
     </entity>
 </doctrine-mapping>

@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Sonata\TranslationBundle\Model\Gedmo\TranslatableInterface;
 use Sonata\TranslationBundle\Model\Gedmo\AbstractPersonalTranslatable;
 use Application\Sonata\MediaBundle\Entity\Media;
+use Application\Sonata\MediaBundle\Entity\GalleryHasMedia;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -84,6 +85,8 @@ class Exhibition extends AbstractPersonalTranslatable implements TranslatableInt
 
     /**
      * @var Media
+     * @Assert\NotBlank()
+     * @Assert\Valid()
      * @Assert\Type("object")
      * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media")
      */
@@ -104,10 +107,10 @@ class Exhibition extends AbstractPersonalTranslatable implements TranslatableInt
     private $artWorks;
 
     /**
-     * @var ArrayCollection|Media[]
-     * @ORM\ManyToMany(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", inversedBy="exhibitions")
+     * @var ArrayCollection|GalleryHasMedia[]
+     * @ORM\ManyToMany(targetEntity="Application\Sonata\MediaBundle\Entity\GalleryHasMedia", cascade={"persist"})
      */
-    private $photos;
+    private $galleryHasMedia;
 
     /**
      * @var ArrayCollection|ExhibitionTranslation[]
@@ -123,7 +126,7 @@ class Exhibition extends AbstractPersonalTranslatable implements TranslatableInt
     public function __construct()
     {
         parent::__construct();
-        $this->images = new ArrayCollection();
+        $this->galleryHasMedia = new ArrayCollection();
         $this->photos = new ArrayCollection();
         $this->translations = new ArrayCollection();
     }
@@ -371,47 +374,34 @@ class Exhibition extends AbstractPersonalTranslatable implements TranslatableInt
     }
 
     /**
-     * Add photos.
+     * Add galleryHasMedia.
      *
-     * @param Media $photo
-     *
-     * @return Exhibition
-     */
-    public function addPhoto($photo)
-    {
-        if (!$photo) {
-            $this->photos = new ArrayCollection();
-        }
-
-        if (!$this->photos->contains($photo)) {
-            $this->photos->add($photo);
-            $photo->addExhibition($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove photo.
-     *
-     * @param Media $photo
+     * @param \Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia
      *
      * @return Exhibition
      */
-    public function removePhoto($photo)
+    public function addGalleryHasMedia(\Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia)
     {
-        $this->getPhotos()->removeElement($photo);
+        $this->galleryHasMedia[] = $galleryHasMedia;
 
         return $this;
     }
-
     /**
-     * Get photos.
+     * Remove galleryHasMedia.
      *
-     * @return ArrayCollection
+     * @param \Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia
      */
-    public function getPhotos()
+    public function removeGalleryHasMedia(\Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia)
     {
-        return $this->photos;
+        $this->galleryHasMedia->removeElement($galleryHasMedia);
+    }
+    /**
+     * Get galleryHasMedia.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGalleryHasMedia()
+    {
+        return $this->galleryHasMedia;
     }
 }

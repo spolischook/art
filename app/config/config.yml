@@ -40,7 +40,7 @@ twig:
     strict_variables: '%kernel.debug%'
     form_themes:
         - 'SonataCoreBundle:Form:datepicker.html.twig'
-
+        - 'SonataMediaBundle:Form:media_widgets.html.twig'
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -93,6 +93,7 @@ sonata_admin:
         html5_validate: false
     templates:
         layout: admin/layout.html.twig
+        short_object_description: AppBundle::short-object-description.html.twig
 
 sonata_block:
     default_contexts: [cms]
@@ -117,15 +118,17 @@ sonata_media:
                     - sonata.media.provider.vimeo
 
             formats:
+                    preview: { width: 100, quality: 100}
                     small: { width: 100 , quality: 70}
                     big:   { width: 500 , quality: 70}
-        picture:
+        art work:
             providers:
                    - sonata.media.provider.image
             formats:
+                   preview: { width: 100, quality: 100}
                    small: { width: 100 , quality: 70}
                    big:   { width: 500 , quality: 70}
-        foto:
+        additional images:
              providers:
                     - sonata.media.provider.image
              formats:

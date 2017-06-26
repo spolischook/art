@@ -7,7 +7,6 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\CoreBundle\Validator\ErrorElement;
 
 class ArtWorkAdmin extends AbstractAdmin
 {
@@ -67,45 +66,36 @@ class ArtWorkAdmin extends AbstractAdmin
                 ->add(
                     'picture',
                     'sonata_type_model_list',
-                    [
-                        'btn_list' => true,
-                    ],
+                    [],
                     [
                         'link_parameters' => [
-                            'context' => 'picture',
+                            'context' => 'art work',
                             'provider' => 'sonata.media.provider.image',
                         ],
                     ])
+
             ->add(
-                'images',
-                'sonata_type_model',
+                'galleryHasMedia',
+                'sonata_type_collection',
                 [
-                    'label' => 'Additional images',
-                    'multiple' => true,
                     'required' => false,
+                    'label' => 'Additional images',
                 ],
                 [
+                    'edit' => 'inline',
                     'inline' => 'table',
                     'sortable' => 'position',
+                    'targetEntity' => 'Application\Sonata\MediaBundle\Entity\GalleryHasMedia',
+                    'admin_code' => 'sonata.media.admin.gallery_has_media',
                     'link_parameters' => [
-                        'context' => 'foto',
+                        'context' => 'additional images',
                         'provider' => 'sonata.media.provider.image',
                     ],
                 ]
             )
+
             ->end()
         ;
-    }
-
-    public function validate(ErrorElement $errorElement, $object)
-    {
-        if ($object->getIsPublished()) {
-            $errorElement
-                ->with('price')
-                ->assertNotBlank()
-                ->end()
-            ;
-        }
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)

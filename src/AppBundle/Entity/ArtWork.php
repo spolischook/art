@@ -8,6 +8,7 @@ use Knp\DoctrineBehaviors\Model as ORMBehaviors;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sonata\TranslationBundle\Model\Gedmo\TranslatableInterface;
 use Application\Sonata\MediaBundle\Entity\Media;
+use Application\Sonata\MediaBundle\Entity\GalleryHasMedia;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Sonata\TranslationBundle\Model\Gedmo\AbstractPersonalTranslatable;
@@ -21,6 +22,7 @@ use AppBundle\Validator\Constraints as AppAssert;
  * @Gedmo\TranslationEntity(class="AppBundle\Entity\ArtWorkTranslation")
  * @UniqueEntity("slug")
  * @AppAssert\SlugEdit
+ * @AppAssert\PriceEdit
  */
 class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterface
 {
@@ -37,7 +39,7 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
 
     /**
      * @var string
-     * @Assert\Valid()
+     *
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Gedmo\Translatable
@@ -47,7 +49,7 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
 
     /**
      * @var string
-     * @Assert\Valid()
+     *
      * @Assert\Type("string")
      * @Gedmo\Translatable
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -56,7 +58,6 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
 
     /**
      * @var string
-     * @Assert\Valid()
      * @Assert\NotBlank()
      * @Assert\Type("string")
      * @Gedmo\Translatable
@@ -128,22 +129,21 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
 
     /**
      * @var Media
-     *
+     * @Assert\Valid()
      * @Assert\Type("object")
-     * @Assert\NotNull(message="Picture is mandatory field.")
-     * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media")
+     * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media", cascade={"persist", "remove"})
      */
     private $picture;
 
     /**
-     * @var ArrayCollection|Media[]
-     * @ORM\ManyToMany(targetEntity="Application\Sonata\MediaBundle\Entity\Media", inversedBy="artWorks")
+     * @var ArrayCollection|GalleryHasMedia[]
+     * @ORM\ManyToMany(targetEntity="Application\Sonata\MediaBundle\Entity\GalleryHasMedia", cascade={"persist"})
      */
-    private $images;
+    private $galleryHasMedia;
 
     /**
      * @var ArrayCollection|Exhibition[]
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Exhibition", inversedBy="artWorks")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Exhibition", inversedBy="artWorks", cascade={"persist"}, fetch="LAZY")
      */
     private $exhibitions;
 
@@ -163,8 +163,8 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
         parent::__construct();
         $this->isPublished = false;
         $this->wasPublished = false;
-        $this->images = new ArrayCollection();
         $this->exhibitions = new ArrayCollection();
+        $this->galleryHasMedia = new ArrayCollection();
     }
 
     /**
@@ -453,51 +453,6 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
     }
 
     /**
-     * Add images.
-     *
-     * @param Media $image
-     *
-     * @return ArtWork
-     */
-    public function addImages($image)
-    {
-        if (!$image) {
-            $this->images = new ArrayCollection();
-        }
-
-        if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->addArtWork($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove image.
-     *
-     * @param Media $image
-     *
-     * @return ArtWork
-     */
-    public function removeImages($image)
-    {
-        $this->getImages()->removeElement($image);
-
-        return $this;
-    }
-
-    /**
-     * Get media.
-     *
-     * @return ArrayCollection
-     */
-    public function getImages()
-    {
-        return $this->images;
-    }
-
-    /**
      * Add exhibition.
      *
      * @param Exhibition $exhibition
@@ -540,5 +495,42 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
     public function getExhibitions()
     {
         return $this->exhibitions;
+    }
+
+    /**
+     * Add galleryHasMedia.
+     *
+     * @param \Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia
+     *
+     * @return ArtWork
+     */
+    public function addGalleryHasMedia(\Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia)
+    {
+        $this->galleryHasMedia[] = $galleryHasMedia;
+
+        return $this;
+    }
+    /**
+     * Remove galleryHasMedia.
+     *
+     * @param \Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia
+     */
+    public function removeGalleryHasMedia(\Application\Sonata\MediaBundle\Entity\GalleryHasMedia $galleryHasMedia)
+    {
+        $this->galleryHasMedia->removeElement($galleryHasMedia);
+    }
+    /**
+     * Get galleryHasMedia.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGalleryHasMedia()
+    {
+        return $this->galleryHasMedia;
+    }
+
+    public function getClass()
+    {
+        return 'artwork';
     }
 }

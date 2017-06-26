@@ -5,26 +5,12 @@ namespace AppBundle\Validator\Constraints;
 use AppBundle\Entity\ArtWork;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Doctrine\ORM\EntityManager;
 
 /**
  * @Annotation
  */
-class SlugEditValidator extends ConstraintValidator
+class PriceEditValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-
-    /**
-     * @param EntityManager $em
-     */
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * @param ArtWork $artWork
      *                         {@inheritdoc}
@@ -39,19 +25,9 @@ class SlugEditValidator extends ConstraintValidator
             return;
         }
 
-        if (!$artWork->getId()) {
-            return;
-        }
-
-        $dbObject = $this->em
-            ->getUnitOfWork()
-            ->getOriginalEntityData($artWork);
-        $newSlug = $artWork->getSlug();
-        $oldSlug = $dbObject['slug'];
-
-        if ($dbObject['wasPublished'] && $oldSlug != $newSlug) {
+        if ($artWork->getIsPublished()) {
             $this->context->buildViolation($constraint->message)
-                ->atPath('slug')
+                ->atPath('price')
                 ->addViolation();
         }
     }

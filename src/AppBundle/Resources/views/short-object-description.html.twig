@@ -1,0 +1,17 @@
+<span class="inner-field-short-description">
+    {% if admin.hasRoute('edit') and admin.isGranted('EDIT') %}
+        <a href="{{ admin.generateObjectUrl('edit', object) }}" target="new">
+            <span>
+              {% if object.providerName is defined and object.providerName == "sonata.media.provider.image" %}
+                {% thumbnail object, 'small' %}
+                <p>{{ description }}</p>
+              {% elseif object.getClass == 'artwork'%}
+                  {% thumbnail object.getPicture, 'small' %}
+                  <p>{{ description }}</p>
+            {% endif %}
+             </span>
+        </a>
+    {% else %}
+        {{ description }}
+    {% endif %}
+</span>

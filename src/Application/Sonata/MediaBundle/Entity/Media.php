@@ -11,7 +11,6 @@
 
 namespace Application\Sonata\MediaBundle\Entity;
 
-use AppBundle\Entity\ArtWork;
 use AppBundle\Entity\Exhibition;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sonata\MediaBundle\Entity\BaseMedia as BaseMedia;
@@ -35,13 +34,6 @@ class Media extends BaseMedia
     protected $id;
 
     /**
-     * @var ArrayCollection|ArtWork[]
-     *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\ArtWork", mappedBy="images")
-     */
-    private $artWorks;
-
-    /**
      * @var ArrayCollection|Exhibition[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Exhibition", mappedBy="photos")
@@ -50,7 +42,6 @@ class Media extends BaseMedia
 
     public function __construct()
     {
-        $this->artWorks = new ArrayCollection();
         $this->exhibitions = new ArrayCollection();
     }
 
@@ -107,50 +98,5 @@ class Media extends BaseMedia
     public function getExhibitions()
     {
         return $this->exhibitions;
-    }
-
-    /**
-     * Add art work.
-     *
-     * @param ArtWork $artWork
-     *
-     * @return Media
-     */
-    public function addArtWork($artWork)
-    {
-        if (!$artWork) {
-            $this->artWorks = new ArrayCollection();
-        }
-
-        if (!$this->artWorks->contains($artWork)) {
-            $this->artWorks->add($artWork);
-            $artWork->addImages($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove art work.
-     *
-     * @param Media $artWork
-     *
-     * @return Media
-     */
-    public function removeArtWork($artWork)
-    {
-        $this->getArtWorks()->removeElement($artWork);
-
-        return $this;
-    }
-
-    /**
-     * Get art works.
-     *
-     * @return ArrayCollection
-     */
-    public function getArtWorks()
-    {
-        return $this->artWorks;
     }
 }

@@ -33,3 +33,7 @@ services:
             arguments: ['@doctrine.orm.entity_manager']
             tags:
                 - { name: validator.constraint_validator }
+    app.contains_price_edit_validator:
+            class: AppBundle\Validator\Constraints\PriceEditValidator
+            tags:
+                 - { name: validator.constraint_validator }

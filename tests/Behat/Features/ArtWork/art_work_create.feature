@@ -18,7 +18,7 @@ Feature: Art work create
     And I press "Create"
     Then I should see form errors:
       | Title            | This value should not be blank. |
-      | Picture          | Picture is mandatory field.     |
+   #   | Picture          | Picture is mandatory field.     |
       | Width            | This value should not be blank. |
       | Height           | This value should not be blank. |
       | Materials        | This value should not be blank. |
@@ -34,7 +34,7 @@ Feature: Art work create
     And I press "Create"
     Then I should see form errors:
       | Title            | This value should not be blank. |
-      | Picture          | This value should not be blank. |
+  #    | Picture          | This value should not be blank. |
       | Widht            | This value should not be blank. |
       | Height           | This value should not be blank. |
       | Materials        | This value should not be blank. |

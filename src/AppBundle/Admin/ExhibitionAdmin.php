@@ -59,7 +59,7 @@ class ExhibitionAdmin extends AbstractAdmin
                 'artWorks',
                 'sonata_type_model',
                 [
-                    'label' => 'Art works',
+                    'label' => ' ',
                     'multiple' => true,
                     'property' => 'title',
                 ],
@@ -78,24 +78,27 @@ class ExhibitionAdmin extends AbstractAdmin
                 ],
                 [
                     'link_parameters' => [
-                        'context' => 'picture',
+                        'context' => 'art work',
                         'provider' => 'sonata.media.provider.image',
                     ],
                 ])
             ->end()
             ->with('Photos', ['class' => 'col-md-4'])
             ->add(
-                'photos',
-                'sonata_type_model',
+                'galleryHasMedia',
+                'sonata_type_collection',
                 [
-                    'label' => 'Additional images',
-                    'multiple' => true,
+                    'required' => false,
+                    'label' => ' ',
                 ],
                 [
+                    'edit' => 'inline',
                     'inline' => 'table',
                     'sortable' => 'position',
+                    'targetEntity' => 'Application\Sonata\MediaBundle\Entity\GalleryHasMedia',
+                    'admin_code' => 'sonata.media.admin.gallery_has_media',
                     'link_parameters' => [
-                        'context' => 'foto',
+                        'context' => 'additional images',
                         'provider' => 'sonata.media.provider.image',
                     ],
                 ]
