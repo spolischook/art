@@ -15,14 +15,17 @@ class ExhibitionAdmin extends AbstractAdmin
         $formMapper
             ->with('Basic', ['class' => 'col-md-8'])
             ->add('title', 'text', ['label' => 'Title'])
-            ->add('description', 'textarea',
+            ->add(
+                'description',
+                'textarea',
                 [
                     'attr' => [
                         'style' => 'height:400px',
                     ],
                     'label' => 'Full description',
                     'required' => false,
-                ])
+                ]
+            )
             ->end()
             ->with('Status', ['class' => 'col-md-4'])
             ->add(
@@ -36,7 +39,6 @@ class ExhibitionAdmin extends AbstractAdmin
                     'format' => 'dd/MM/yyyy HH:mm',
                     'label' => 'Creation date',
                 ]
-
             )
             ->add(
                 'closeDateTime',
@@ -49,7 +51,6 @@ class ExhibitionAdmin extends AbstractAdmin
                     'format' => 'dd/MM/yyyy HH:mm',
                     'label' => 'Creation date',
                 ]
-
             )
             ->add('locationPlace', 'text', ['label' => 'Location'])
             ->add('facebookEvent', 'text')
@@ -66,7 +67,8 @@ class ExhibitionAdmin extends AbstractAdmin
                 [
                     'inline' => 'table',
                     'sortable' => 'position',
-                ])
+                ]
+            )
             ->end()
             ->with('Info', ['class' => 'col-md-8'])
             ->add('slug', 'text', ['label' => 'Slug'])
@@ -81,7 +83,8 @@ class ExhibitionAdmin extends AbstractAdmin
                         'context' => 'art work',
                         'provider' => 'sonata.media.provider.image',
                     ],
-                ])
+                ]
+            )
             ->end()
             ->with('Photos', ['class' => 'col-md-4'])
             ->add(

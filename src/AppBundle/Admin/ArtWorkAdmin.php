@@ -14,18 +14,21 @@ class ArtWorkAdmin extends AbstractAdmin
     {
         $formMapper
             ->with('Basic', ['class' => 'col-md-8'])
-                ->add('title', 'text', ['label' => 'Title'])
-                ->add('description', 'textarea',
-                    [
-                        'attr' => [
-                            'style' => 'height:400px',
-                        ],
-                        'label' => 'Full description',
-                        'required' => false,
-                    ])
-             ->end()
-             ->with('Properties', ['class' => 'col-md-4'])
-                ->add(
+            ->add('title', 'text', ['label' => 'Title'])
+            ->add(
+                'description',
+                'textarea',
+                [
+                    'attr' => [
+                        'style' => 'height:400px',
+                    ],
+                    'label' => 'Full description',
+                    'required' => false,
+                ]
+            )
+            ->end()
+            ->with('Properties', ['class' => 'col-md-4'])
+            ->add(
                 'date',
                 'sonata_type_datetime_picker',
                 [
@@ -36,44 +39,47 @@ class ArtWorkAdmin extends AbstractAdmin
                     'format' => 'dd/MM/yyyy',
                     'label' => 'Creation date',
                 ]
+            )
+            ->add('materials', 'text', ['label' => 'Materials'])
+            ->add('width', 'integer', ['label' => 'Width'])
+            ->add('height', 'integer', ['label' => 'Height'])
+            ->add('price', 'money', [
+                'currency' => 'USD',
+                'grouping' => true,
+                'label' => 'Price',
+                'required' => false,
 
-                )
-                ->add('materials', 'text', ['label' => 'Materials'])
-                ->add('width', 'integer', ['label' => 'Width'])
-                ->add('height', 'integer', ['label' => 'Height'])
-                ->add('price', 'money', [
-                    'currency' => 'USD',
-                    'grouping' => true,
-                    'label' => 'Price',
-                    'required' => false,
-
-                ])
-                ->add('inStock', 'choice', [
-                       'choices' => [
-                           'Available' => true,
-                           'Sold' => false,
-                  ],
-                ])
-                ->add('isPublished', 'choice', [
-                   'choices' => [
+            ])
+            ->add(
+                'inStock',
+                'choice',
+                [
+                    'choices' => [
+                        'Available' => true,
+                        'Sold' => false,
+                    ],
+                ]
+            )
+            ->add('isPublished', 'choice', [
+                'choices' => [
                     'On front' => true,
                     'Unpublished' => false,
-                   ],
-                ])
+                ],
+            ])
             ->end()
             ->with('Info', ['class' => 'col-md-8'])
-                ->add('slug', 'text', ['label' => 'Slug', 'required' => false])
-                ->add(
-                    'picture',
-                    'sonata_type_model_list',
-                    [],
-                    [
-                        'link_parameters' => [
-                            'context' => 'art work',
-                            'provider' => 'sonata.media.provider.image',
-                        ],
-                    ])
-
+            ->add('slug', 'text', ['label' => 'Slug', 'required' => false])
+            ->add(
+                'picture',
+                'sonata_type_model_list',
+                [],
+                [
+                    'link_parameters' => [
+                        'context' => 'art work',
+                        'provider' => 'sonata.media.provider.image',
+                    ],
+                ]
+            )
             ->add(
                 'galleryHasMedia',
                 'sonata_type_collection',
@@ -93,17 +99,14 @@ class ArtWorkAdmin extends AbstractAdmin
                     ],
                 ]
             )
-
-            ->end()
-        ;
+            ->end();
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
             ->add('title', null, ['label' => 'Title'])
-            ->add('date')
-        ;
+            ->add('date');
     }
 
     protected function configureListFields(ListMapper $listMapper)
@@ -118,14 +121,13 @@ class ArtWorkAdmin extends AbstractAdmin
             ])
             ->add('isPublished', null, [
                 'editable' => true,
-                ])
+            ])
             ->add('_action', null, [
                 'actions' => [
                     'edit' => [],
                     'delete' => [],
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function toString($object)

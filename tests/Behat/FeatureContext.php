@@ -2,12 +2,10 @@
 
 namespace Tests\Behat;
 
-use Behat\Behat\Hook\Scope\AfterStepScope;
-use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\RawMinkContext;
-use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use SensioLabs\Behat\PageObjectExtension\Context\PageObjectAware;
 use Tests\Behat\Elements\SonataAdminForm;
 use Tests\Behat\Elements\SonataField;
@@ -31,6 +29,16 @@ class FeatureContext extends RawMinkContext implements PageObjectAware
     public function __construct()
     {
         $this->faker = \Faker\Factory::create();
+    }
+
+    /** @AfterScenario */
+    public function after(AfterScenarioScope $scope)
+    {
+        if ($scope->getTestResult()->isPassed()) {
+            return;
+        }
+
+        fwrite(STDOUT, $this->getSession()->getPage()->getOuterHtml());
     }
 
     /**

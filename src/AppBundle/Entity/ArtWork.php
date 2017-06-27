@@ -143,7 +143,9 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
 
     /**
      * @var ArrayCollection|Exhibition[]
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Exhibition", inversedBy="artWorks", cascade={"persist"}, fetch="LAZY")
+     * @ORM\ManyToMany(
+     *     targetEntity="AppBundle\Entity\Exhibition", inversedBy="artWorks", cascade={"persist"}, fetch="LAZY"
+     * )
      */
     private $exhibitions;
 
