@@ -13,7 +13,7 @@ class PriceEditValidator extends ConstraintValidator
 {
     /**
      * @param ArtWork $artWork
-     *                         {@inheritdoc}
+     * {@inheritdoc}
      */
     public function validate($artWork, Constraint $constraint)
     {
@@ -25,10 +25,17 @@ class PriceEditValidator extends ConstraintValidator
             return;
         }
 
-        if ($artWork->getIsPublished()) {
-            $this->context->buildViolation($constraint->message)
-                ->atPath('price')
-                ->addViolation();
+        // Don't check price if work is not published
+        if (!$artWork->getIsPublished()) {
+            return;
         }
+
+        if ($artWork->getPrice()) {
+            return;
+        }
+
+        $this->context->buildViolation($constraint->message)
+            ->atPath('price')
+            ->addViolation();
     }
 }
