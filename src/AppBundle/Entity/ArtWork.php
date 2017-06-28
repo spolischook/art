@@ -431,6 +431,16 @@ class ArtWork extends AbstractPersonalTranslatable implements TranslatableInterf
     }
 
     /**
+     * Symlink to getWasPublished method
+     *
+     * @return bool
+     */
+    public function isWasPublished()
+    {
+        return $this->getWasPublished();
+    }
+
+    /**
      * Set picture.
      *
      * @param Media $picture

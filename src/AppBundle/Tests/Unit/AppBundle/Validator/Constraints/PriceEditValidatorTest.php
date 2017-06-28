@@ -5,19 +5,26 @@ namespace AppBundle\Tests\Unit\AppBundle\Validator\Constraints;
 use AppBundle\Entity\ArtWork;
 use AppBundle\Validator\Constraints\PriceEdit;
 use AppBundle\Validator\Constraints\PriceEditValidator;
-use Doctrine\ORM\EntityManager;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class PriceEditValidatorTest extends ConstraintValidatorTestCase
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-
     protected function createValidator()
     {
         return new PriceEditValidator();
+    }
+
+    public function testConstraintTarget()
+    {
+        $constraint = new PriceEdit();
+        $this->assertSame(Constraint::CLASS_CONSTRAINT, $constraint->getTargets());
+    }
+
+    public function testValidateNonObject()
+    {
+        $this->validator->validate([], new PriceEdit());
+        $this->assertNoViolation();
     }
 
     public function testValidateNewEntity()
@@ -40,6 +47,7 @@ class PriceEditValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate($artWork, new PriceEdit());
         $this->assertNoViolation();
     }
+
     public function testValidatePublishedWithoutPrice()
     {
         $artWork = new ArtWork();

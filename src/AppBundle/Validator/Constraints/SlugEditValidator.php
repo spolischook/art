@@ -27,7 +27,7 @@ class SlugEditValidator extends ConstraintValidator
 
     /**
      * @param ArtWork $artWork
-     *                         {@inheritdoc}
+     * {@inheritdoc}
      */
     public function validate($artWork, Constraint $constraint)
     {
@@ -46,10 +46,16 @@ class SlugEditValidator extends ConstraintValidator
         $dbObject = $this->em
             ->getUnitOfWork()
             ->getOriginalEntityData($artWork);
+
+        // If work was not published, we don't care about slug
+        if (!$dbObject['wasPublished']) {
+            return;
+        }
+
         $newSlug = $artWork->getSlug();
         $oldSlug = $dbObject['slug'];
 
-        if ($dbObject['wasPublished'] && $oldSlug != $newSlug) {
+        if ($oldSlug != $newSlug) {
             $this->context->buildViolation($constraint->message)
                 ->atPath('slug')
                 ->addViolation();
