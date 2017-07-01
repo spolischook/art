@@ -6,3 +6,14 @@ Art Project
 
 Supper pretty and simple blog for artists.
 
+Setup project
+-------------
+
+Clone the project, enter the directory and put into console:
+
+```bash
+composer install
+bin/console doctrine:database:create
+bin/console doctrine:schema:create
+bin/console server:start
+```
